@@ -16,8 +16,6 @@ public struct Range : IRange, IEquatable<Range>
     private int _stop;
     private int _step;
 
-    #region Constructors
-
     /// <summary>
     /// Generates new range object with given parametres.
     /// </summary>
@@ -42,10 +40,6 @@ public struct Range : IRange, IEquatable<Range>
     /// <param name="stop">Limit of range.</param>
     public Range(int stop) : this(0, stop) { }
 
-    #endregion
-
-
-    #region Properties
 
 
     /// <summary>
@@ -99,11 +93,6 @@ public struct Range : IRange, IEquatable<Range>
 
     private int StepCount => (_stop - _start - Math.Abs(_step) / _step) / _step + 1;
 
-
-    #endregion
-
-
-    #region Methods
 
     /// <summary>
     /// Checks if this range contains given number.
@@ -188,5 +177,4 @@ public struct Range : IRange, IEquatable<Range>
                 ((Count > 10) ? ", ...]" : "]"));
     }
 
-    #endregion
 }
