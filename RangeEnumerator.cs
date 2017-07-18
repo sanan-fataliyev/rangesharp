@@ -7,50 +7,50 @@ using System.Collections;
 /// Provides iterating in foreach and manipulating via LINQ over elements of range
 /// </summary>
 public struct RangeEnumerator : IEnumerator<int>
+{
+    private Range _range;
+    private int _current;
+    private int _mode; // 0 - not started, 1 - started, 2- finished
+
+    private bool HasMoreElement { get { return (_current != _range.Stop) && ((_current < _range.Stop) ^ (_range.Step < 0)); } }
+
+
+    internal RangeEnumerator(ref Range range)
     {
-        private Range _range;
-        private int _current;
-        private int _mode; // 0 - not started, 1 - started, 2- finished
 
-        private bool HasMoreElement => (_current != _range.Stop) && ((_current < _range.Stop) ^ (_range.Step < 0));
-       
+        _range = range;
+        _mode = 0;
+        _current = 0;
+    }
 
-        internal RangeEnumerator(ref Range range)
+    public void Dispose() { }
+
+
+    public bool MoveNext()
+    {
+        switch (_mode)
         {
-
-            _range = range;
-            _mode = 0;
-            _current = 0;
-        }
-
-        public void Dispose() { }
-
-
-        public bool MoveNext()
-        {
-            switch (_mode)
-            {
-                case 0:
-                    _mode = 1;
-                    _current = _range.Start;
-                    return true;
-                case 1:
-                    _current += _range.Step;
-                    if (!HasMoreElement)
-                    {
-                        _mode = 2;
-                        return false;
-                    }
-                    return true;
-                default: // 2
+            case 0:
+                _mode = 1;
+                _current = _range.Start;
+                return true;
+            case 1:
+                _current += _range.Step;
+                if (!HasMoreElement)
+                {
+                    _mode = 2;
                     return false;
-            }
+                }
+                return true;
+            default: // 2
+                return false;
         }
+    }
 
-        public void Reset()
-        {
-            _mode = 0;
-        }
+    public void Reset()
+    {
+        _mode = 0;
+    }
 
     bool IEnumerator.MoveNext()
     {
@@ -67,24 +67,24 @@ public struct RangeEnumerator : IEnumerator<int>
         Dispose();
     }
 
-    object IEnumerator.Current => Current as object;
+    object IEnumerator.Current { get { return Current as object; } }
 
     public int Current
+    {
+        get
         {
-            get
+            switch (_mode)
             {
-                switch (_mode)
-                {
-                    case 1:
-                        return _current;
-                    case 0:
-                        throw new InvalidOperationException("Enumeration has not started. Call MoveNext.");
-                    default: //2
-                        throw new InvalidOperationException("Enumeration already finished.");
-                }
+                case 1:
+                    return _current;
+                case 0:
+                    throw new InvalidOperationException("Enumeration has not started. Call MoveNext.");
+                default: //2
+                    throw new InvalidOperationException("Enumeration already finished.");
             }
-
         }
+
+    }
 
 
 }

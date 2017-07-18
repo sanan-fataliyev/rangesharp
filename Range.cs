@@ -48,8 +48,6 @@ public struct Range : IRange, IEquatable<Range>
     public int Start
     {
         get { return _start; }
-
-        set { _start = value; }
     }
 
 
@@ -60,7 +58,6 @@ public struct Range : IRange, IEquatable<Range>
     public int Stop
     {
         get { return _stop; }
-        set { _stop = value; }
     }
 
     /// <summary>
@@ -69,29 +66,23 @@ public struct Range : IRange, IEquatable<Range>
     public int Step
     {
         get { return _step; }
-        set
-        {
-            if (value == 0)
-                throw new ArgumentException("Step can not be zero.");
-            _step = value;
-        }
     }
 
     /// <summary>
     /// Count of elements of this range.
     /// </summary>
-    public int Count => ShouldGenerate ? StepCount : 0;
+    public int Count { get { return ShouldGenerate ? StepCount : 0; } }
 
     /// <summary>
     /// Sum of elements of this range.
     /// </summary>
-    public int Sum => ShouldGenerate ? ((_start + this[Count - 1]) * Count) >> 1 : 0;
+    public int Sum { get { return ShouldGenerate ? ((_start + this[Count - 1]) * Count) >> 1 : 0; } }
 
 
-    private bool ShouldGenerate => (_start != _stop) && !((_start < _stop) ^ (_step > 0));
+    private bool ShouldGenerate { get { return (_start != _stop) && !((_start < _stop) ^ (_step > 0)); } }
 
 
-    private int StepCount => (_stop - _start - Math.Abs(_step) / _step) / _step + 1;
+    private int StepCount { get { return (_stop - _start - Math.Abs(_step) / _step) / _step + 1; } }
 
 
     /// <summary>
@@ -118,7 +109,7 @@ public struct Range : IRange, IEquatable<Range>
     /// <param name="number">Given number.</param>
     /// 
     /// <returns>Returns the index of given number if it is in elements of range, otherwise -1.</returns>
-    public int IndexOf(int number) => Contains(number) ? (number - _start) / _step : -1;
+    public int IndexOf(int number) { return Contains(number) ? (number - _start) / _step : -1; }
 
 
     /// <summary>
@@ -144,42 +135,45 @@ public struct Range : IRange, IEquatable<Range>
 
 
     // IEnumerable impl
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
 
-    public IEnumerator<int> GetEnumerator() => ShouldGenerate ? new RangeEnumerator(ref this) : Enumerable.Empty<int>().GetEnumerator();
-
-
+    public IEnumerator<int> GetEnumerator() { return ShouldGenerate ? new RangeEnumerator(ref this) : Enumerable.Empty<int>().GetEnumerator(); }
 
 
-    public static bool operator ==(Range rigth, Range left) => rigth._step == left._step &&
-                                                               rigth._stop == left._stop &&
-                                                               rigth._start == left._start;
 
 
-    public static bool operator !=(Range rigth, Range left) => !(rigth == left);
+    public static bool operator ==(Range rigth, Range left)
+    {
+        return rigth._step == left._step &&
+           rigth._stop == left._stop &&
+           rigth._start == left._start;
+    }
+
+
+    public static bool operator !=(Range rigth, Range left) { return !(rigth == left); }
 
 
     // overriding object methods
-    public bool Equals(Range other) => other == this;
+    public bool Equals(Range other) { return other == this; }
 
 
-    public override bool Equals(object other) => other is Range && ((Range)other) == this;
+    public override bool Equals(object other) { return other is Range && ((Range)other) == this; }
 
 
-    public override int GetHashCode() => ((~_start) | _stop) ^ _step;
+    public override int GetHashCode() { return ((~_start) | _stop) ^ _step; }
 
 
     public override string ToString()
     {
-     
+
         var result = new StringBuilder();
 
         var rangeInfo = string.Format("Range(start: {0}, stop: {1}, step: {2})", _start, _stop, _step);
         result.AppendLine(rangeInfo);
 
-        var elementsStr = Count > 10? string.Join(", ", this.Take(9)) + "..." + this[Count-1] : string.Join(", ", this);
+        var elementsStr = Count > 10 ? string.Join(", ", this.Take(9)) + "..." + this[Count - 1] : string.Join(", ", this);
         result.Append(string.Concat("[", elementsStr, "]"));
-        
+
         return result.ToString();
     }
 
