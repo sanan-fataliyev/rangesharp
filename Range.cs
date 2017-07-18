@@ -171,10 +171,16 @@ public struct Range : IRange, IEquatable<Range>
 
     public override string ToString()
     {
-        return
-            string.Concat(
-                $"Range(start: {_start}, stop: {_stop}, step: {_step})\n[{string.Join(", ", this.Take(10))}",
-                ((Count > 10) ? ", ...]" : "]"));
+     
+        var result = new StringBuilder();
+
+        var rangeInfo = string.Format("Range(start: {0}, stop: {1}, step: {2})", _start, _stop, _step);
+        result.AppendLine(rangeInfo);
+
+        var elementsStr = Count > 10? string.Join(", ", this.Take(9)) + "..." + this[Count-1] : string.Join(", ", this);
+        result.Append(string.Concat("[", elementsStr, "]"));
+        
+        return result.ToString();
     }
 
 }
