@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 public struct Range : IRange, IEquatable<Range>
 {
 
-    private int _start;
-    private int _stop;
-    private int _step;
+    private readonly int _start;
+    private readonly int _stop;
+    private readonly int _step;
 
     /// <summary>
     /// Generates new range object with given parametres.
