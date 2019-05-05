@@ -1,11 +1,11 @@
 ### Range data structure (integer sequence with start, stop, step parameters) 
-### Supports negative interval, negative step
+### Supports negative interval and negative step
 
 Provides the following operations:
 - `Enumeration`  
-- `Access element by index` **O(1)** time/space  
-- `bool  Contains(int  number)` **O(1)** time/space  
-- `int  IndexOf(int  number)` **O(1)** time/space  
+- `Access element by index` optimized to **O(1)** time/space  
+- `bool  Contains(int  number)` optimized to **O(1)** time/space  
+- `int  IndexOf(int  number)` optimized to **O(1)** time/space  
 
 Example:
 
